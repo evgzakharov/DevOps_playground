@@ -17,5 +17,5 @@
         name: "movie-application"
         image: "movie-test-image:ex1"
         state: started
-        published_ports:
-          9000:8000
+        ports:
+          8080:9000
