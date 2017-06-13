@@ -19,3 +19,16 @@
         state: started
         ports:
           8080:9000
+        networks:
+          - name: local_net
+            aliases: ["test_zone"]
+    - name: start movie jar 2
+      docker_container:
+        name: "movie-application2"
+        image: "movie-test-image:ex1"
+        state: started
+        ports:
+          8081:9000
+        networks:
+          - name: local_net
+            aliases: ["test_zone2"]
