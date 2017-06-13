@@ -1,0 +1,34 @@
+---
+- hosts: test_hosts
+  connection: local
+  roles:
+    - docker_jars
+  tasks:
+    - debug: msg="current date {{ ansible_date_time.date }}"
+    - name: create movie image
+      docker_image:
+        name: "movie-test-image"
+        tag: ex1
+        path: /Users/evgenyzaharov/Workspace/alfatest/movie/
+        dockerfile: /src/main/docker/DockerFile
+        state: present
+    - name: start movie jar
+      docker_container:
+        name: "movie-application"
+        image: "movie-test-image:ex1"
+        state: started
+        ports:
+          8080:9000
+        networks:
+          - name: local_net
+            aliases: ["test_zone"]
+    - name: start movie jar 2
+      docker_container:
+        name: "movie-application2"
+        image: "movie-test-image:ex1"
+        state: started
+        ports:
+          8081:9000
+        networks:
+          - name: local_net
+            aliases: ["test_zone2"]
