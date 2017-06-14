@@ -1,0 +1,36 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.3.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+task copyJars(type: Copy) {
+    from subprojects.collect { it.tasks.withType(Jar) }
+    into "$buildDir/allJars"
+}
+
+task clean {
+    delete file(buildDir)
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    sourceCompatibility = 1.8
+
+    task generateSourceFolders {
+        doLast {
+            sourceSets.all { set ->
+                set.allSource.srcDirs.each { it.mkdirs() }
+            }
+        }
+    }
+}
+

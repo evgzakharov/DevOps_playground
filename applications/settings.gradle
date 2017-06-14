@@ -1,0 +1,6 @@
+include 'service1'
+include 'service2'
+include 'config_service'
+include 'eureka_server'
+
+rootProject.name = 'services_example'

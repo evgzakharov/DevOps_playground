@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: multiply
+  profiles:
+    active: production
+  cloud:
+    config:
+      uri: http://localhost:8888
+#    discovery:
+#      enabled: true
+#    serviceId: multiply
