@@ -7,6 +7,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
@@ -19,9 +20,12 @@ task clean {
     delete file(buildDir)
 }
 
+group = 'docker_services'
+
 subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
+    apply plugin: 'docker'
 
     sourceCompatibility = 1.8
 
@@ -29,6 +33,18 @@ subprojects {
         doLast {
             sourceSets.all { set ->
                 set.allSource.srcDirs.each { it.mkdirs() }
+            }
+        }
+    }
+
+    task buildDocker(type: Docker, dependsOn: build) {
+        push = false
+        applicationName = jar.baseName
+        dockerfile = file('src/main/docker/Dockerfile')
+        doFirst {
+            copy {
+                from jar
+                into stageDir
             }
         }
     }
