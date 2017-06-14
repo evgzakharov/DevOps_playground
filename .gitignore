@@ -1,0 +1,20 @@
+# Gradle
+# ------
+.gradle
+build/
+buildSrc/build/
+
+# IDEA
+# ----
+.idea
+.shelf
+/*.iml
+/*.ipr
+/*.iws
+/buildSrc/*.iml
+/buildSrc/*.ipr
+/buildSrc/*.iws
+/buildSrc/out
+out/
+/.teamcity/*.iml
+/.teamcity/target
