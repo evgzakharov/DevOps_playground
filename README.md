@@ -20,7 +20,7 @@ ansible-playbook -i test_hosts site.yml -e 'ansible_python_interpreter=/usr/loca
 ```
 docker ps
 ```
-Expect to see in terminal something like this: 
+In terminal you should see something like this: 
 ```
 CONTAINER ID        IMAGE                                    COMMAND                  CREATED             STATUS              PORTS                    NAMES
 dc194b3b43f0        services_example/service2:latest         "sh -c 'java $JAVA..."   10 minutes ago      Up 31 seconds                                service2-application
