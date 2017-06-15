@@ -3,32 +3,76 @@
   connection: local
   roles:
     - docker_jars
+  vars:
+    config_server: "test-zone"
+    config_server_port: 8889
+    eureka_server: "test-zone2"
+    eureka_server_port: 8761
+    service1_port: 8080
+    recreate: false
+    restart: false
+    server_git: "https://github.com/evgzakharov/DevOps_playground"
+    config_server_url: "http://{{config_server}}:{{config_server_port}}"
+    eureka_server_url: "http://{{eureka_server}}:{{eureka_server_port}}/eureka"
   tasks:
     - debug: msg="current date {{ ansible_date_time.date }}"
-    - name: create movie image
-      docker_image:
-        name: "movie-test-image"
-        tag: ex1
-        path: /Users/evgenyzaharov/Workspace/alfatest/movie/
-        dockerfile: /src/main/docker/DockerFile
-        state: present
-    - name: start movie jar
+    - debug: msg="config_server_url {{ config_server_url }}"
+    - debug: msg="eureka_server_url {{ eureka_server_url }}"
+    - name: start config server
       docker_container:
-        name: "movie-application"
-        image: "movie-test-image:ex1"
+        name: "config-server-application"
+        image: "services_example/config_service:latest"
         state: started
-        ports:
-          8080:9000
+        env:
+          SERVER_PORT: "{{config_server_port}}"
+          CONFIG_GIT: "{{server_git}}"
         networks:
           - name: local_net
-            aliases: ["test_zone"]
-    - name: start movie jar 2
-      docker_container:
-        name: "movie-application2"
-        image: "movie-test-image:ex1"
-        state: started
+            aliases: ["{{config_server}}"]
         ports:
-          8081:9000
+          "8080:{{config_server_port}}"
+        restart: "{{restart}}"
+        recreate: "{{recreate}}"
+    - name: start eureka server
+      docker_container:
+        name: "eureka-server-application"
+        image: "services_example/eureka_server:latest"
+        state: started
+        env:
+          SERVER_PORT: "{{eureka_server_port}}"
+        ports:
+          "8081:{{eureka_server_port}}"
         networks:
           - name: local_net
-            aliases: ["test_zone2"]
+            aliases: ["{{eureka_server}}"]
+        restart: "{{restart}}"
+        recreate: "{{recreate}}"
+    - name: start service1
+      docker_container:
+        name: "service1-application"
+        image: "services_example/service1:latest"
+        state: started
+        env:
+          CONFIG_SERVER: "{{config_server_url}}"
+          EUREKA_SERVER: "{{eureka_server_url}}"
+          SERVER_PORT: "{{service1_port}}"
+        ports:
+          "8082:{{service1_port}}"
+        networks:
+          - name: local_net
+            aliases: ["test-zone3"]
+        restart: "{{restart}}"
+        recreate: "{{recreate}}"
+    - name: start service2
+      docker_container:
+        name: "service2-application"
+        image: "services_example/service2:latest"
+        state: started
+        env:
+          CONFIG_SERVER: "{{config_server_url}}"
+          EUREKA_SERVER: "{{eureka_server_url}}"
+        networks:
+          - name: local_net
+            aliases: ["test-zone4"]
+        restart: "{{restart}}"
+        recreate: "{{recreate}}"

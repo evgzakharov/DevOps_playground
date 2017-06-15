@@ -1,7 +1,7 @@
 server:
-  port: 0
+  port: ${SERVER_PORT:0}
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: "${EUREKA_SERVER}"

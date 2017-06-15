@@ -5,4 +5,4 @@ spring:
     active: production
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: "${CONFIG_SERVER}"
