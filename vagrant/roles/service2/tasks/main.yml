@@ -1,3 +1,5 @@
+- debug: msg="config_server_url {{ config_server_url }}"
+- debug: msg="config_server_url {{ eureka_server_url }}"
 - name: start service2
   docker_container:
     name: "service2-application"
