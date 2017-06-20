@@ -2,9 +2,10 @@ require 'yaml'
 
 configuration = YAML::load(File.read("#{File.dirname(__FILE__)}/common.yml"))
 
+ANSIBLE_INVENTORY_DIR = '.vagrant/provisioners/ansible/inventory'
+
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
-  config.vm.network "forwarded_port", guest: 80, host: 8080
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
@@ -13,13 +14,14 @@ Vagrant.configure("2") do |config|
     config.vm.define "node-#{i}" do |node|
       node.vm.hostname = "vm#{i}"
       node.vm.network :private_network, ip: "192.168.5.#{i+1}"
+      node.vm.network "forwarded_port", guest: "8080", host: "#{i}"
 
       node.vm.provider "virtualbox" do |v|
         v.memory = 2024
         v.cpus = 1
       end
 
-      config.vm.provision "shell", privileged: false, inline: <<-EOF
+      node.vm.provision "shell", privileged: false, inline: <<-EOF
         echo "register host from common config is #{configuration["registry_host"]}"
       EOF
 
@@ -45,12 +47,11 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "play-site.yml"
-    ansible.verbose = "v"
+  config.vm.provision "vai" do |ansible|
+    ansible.inventory_dir=ANSIBLE_INVENTORY_DIR
     ansible.groups = {
-      "api" => ["vm1"],
-      "service" => ["vm2"]
+      "api" => ["node-1"],
+      "service" => ["node-2"]
     }
   end
 end
