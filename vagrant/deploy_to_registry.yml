@@ -1,0 +1,20 @@
+---
+- hosts: test_hosts
+  connection: local
+  tasks:
+    - debug: msg="current date {{ ansible_date_time.date}}"
+    - name: load vars from file
+      include_vars:
+        file: common.yml
+    - debug: msg="registry host from common config {{registry_host}}"
+    - name: prepare image to push
+      docker_image:
+        name: "{{item}}"
+        state: present
+        repository: "{{registry_host}}/{{item}}"
+        push: true
+      with_items:
+        - "services_example/config_service:latest"
+        - "services_example/eureka_server:latest"
+        - "services_example/service1:latest"
+        - "services_example/service2:latest"
