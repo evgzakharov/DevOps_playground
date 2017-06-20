@@ -7,6 +7,15 @@
       include_vars:
         file: common.yml
     - debug: msg="registry host from common config {{registry_host}}"
+    - name: remove images
+      docker_image:
+        name: "{{registry_host}}/{{item}}"
+        state: absent
+      with_items:
+        - "services_example/config_service:latest"
+        - "services_example/eureka_server:latest"
+        - "services_example/service1:latest"
+        - "services_example/service2:latest"
     - name: prepare image to push
       docker_image:
         name: "{{item}}"

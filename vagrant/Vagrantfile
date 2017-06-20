@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
 
-  (1..1).each do |i|
+  (1..2).each do |i|
     config.vm.define "node-#{i}" do |node|
       node.vm.hostname = "vm#{i}"
       node.vm.network :private_network, ip: "192.168.5.#{i+1}"
@@ -42,11 +42,15 @@ Vagrant.configure("2") do |config|
          }" > /etc/docker/daemon.json
         sudo systemctl restart docker
       SHELL
-
-      node.vm.provision "ansible" do |ansible|
-        ansible.playbook = "play-site.yml"
-        ansible.verbose = "v"
-      end
     end
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "play-site.yml"
+    ansible.verbose = "v"
+    ansible.groups = {
+      "api" => ["vm1"],
+      "service" => ["vm2"]
+    }
   end
 end

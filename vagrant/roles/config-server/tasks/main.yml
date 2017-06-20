@@ -1,0 +1,12 @@
+- name: install test application
+  docker_container:
+    name: "config-server-application"
+    image: "{{registry_host}}/services_example/config_service:latest"
+    state: started
+    env:
+      SERVER_PORT: "{{config_server_port}}"
+      CONFIG_GIT: "{{server_git}}"
+    ports:
+      "{{config_server_port}}:{{config_server_port}}"
+    restart: "{{restart}}"
+    recreate: "{{recreate}}"

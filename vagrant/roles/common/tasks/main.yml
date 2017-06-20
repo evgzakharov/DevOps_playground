@@ -1,0 +1,3 @@
+- name: load vars from file
+  include_vars:
+    file: common.yml

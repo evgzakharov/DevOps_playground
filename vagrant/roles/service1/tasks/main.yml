@@ -1,0 +1,13 @@
+- name: start service1
+  docker_container:
+    name: "service1-application"
+    image: "{{registry_host}}/services_example/service1:latest"
+    state: started
+    env:
+      CONFIG_SERVER: "{{config_server_url}}"
+      EUREKA_SERVER: "{{eureka_server_url}}"
+      SERVER_PORT: "{{service_port}}"
+    ports:
+      "{{service_port}}:{{service_port}}"
+    restart: "{{restart}}"
+    recreate: "{{recreate}}"

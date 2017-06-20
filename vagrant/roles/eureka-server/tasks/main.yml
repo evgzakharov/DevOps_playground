@@ -1,0 +1,12 @@
+- name: start eureka server
+  docker_container:
+    name: "eureka-server-application"
+    image: "{{registry_host}}/services_example/eureka_server:latest"
+    state: started
+    env:
+      SERVER_PORT: "{{eureka_server_port}}"
+      EUREKA_URL: "{{eureka_server_url}}"
+    ports:
+      "{{eureka_server_port}}:{{eureka_server_port}}"
+    restart: "{{restart}}"
+    recreate: "{{recreate}}"

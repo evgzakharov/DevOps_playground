@@ -40,6 +40,7 @@
         state: started
         env:
           SERVER_PORT: "{{eureka_server_port}}"
+          EUREKA_URL: "{{eureka_server_url}}"
         ports:
           "8081:{{eureka_server_port}}"
         networks:

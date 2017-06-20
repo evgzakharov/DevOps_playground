@@ -1,28 +1,27 @@
 ---
-- hosts: all
+- hosts: api
   become: true
   vars:
-    config_server: "test-zone"
-    config_server_port: 8889
-    eureka_server: "test-zone2"
-    eureka_server_port: 8761
-    service1_port: 8080
+    config_server: "{{groups['api'][0]}}"
+    current_server: "{{groups['api'][0]}}"
+    another_server: "{{groups['service'][0]}}"
     recreate: true
     restart: true
-    server_git: "https://github.com/evgzakharov/DevOps_playground"
-    config_server_url: "http://{{config_server}}:{{config_server_port}}"
-    eureka_server_url: "http://{{eureka_server}}:{{eureka_server_port}}/eureka"
-  tasks:
-    - debug: msg="current date {{ ansible_date_time.date }}"
-    - name: install test application
-      docker_container:
-        name: "config-server-application"
-        image: "172.25.63.87:5000/services_example/config_service:latest"
-        state: started
-        env:
-          SERVER_PORT: "{{config_server_port}}"
-          CONFIG_GIT: "{{server_git}}"
-        ports:
-          "8080:{{config_server_port}}"
-        restart: "{{restart}}"
-        recreate: "{{recreate}}"
+  roles:
+    - common
+    - config-server
+    - eureka-server
+    - service1
+
+  - hosts: service
+    become: true
+    vars:
+      config_server: "{{groups['api'][0]}}"
+      current_server: "{{groups['service'][0]}}"
+      another_server: "{{groups['api'][0]}}"
+      recreate: true
+      restart: true
+    roles:
+      - common
+      - eureka-server
+      - service2
