@@ -1,42 +1,46 @@
 REGISTRY_IP = "172.25.63.87"
 
-# docker run -it -p 5000:5000 --rm --entrypoint cat registry:2
-
 Vagrant.configure("2") do |config|
   config.vm.box = "centos/7"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
 
-  config.vm.define 'vm1' do |node|
-   node.vm.hostname = 'vm1'
-   node.vm.network :private_network, ip: '192.168.5.5'
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_guest = true
 
-   node.vm.provider "virtualbox" do |v|
-     v.memory = 2024
-     v.cpus = 1
-   end
+  (1..1).each do |i|
+    config.vm.define "node-#{i}" do |node|
+      node.vm.hostname = "vm#{i}"
+      node.vm.network :private_network, ip: "192.168.5.#{i+1}"
 
-   node.vm.provision "shell", inline: <<-SHELL
-     sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-     sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-     sudo yum -y install docker-ce
-     sudo yum -y install -y python-pip
-     sudo yum install python-pip
-     sudo pip install docker
-   SHELL
+      node.vm.provider "virtualbox" do |v|
+        v.memory = 2024
+        v.cpus = 1
+      end
 
-   node.vm.provision "shell", inline: <<-SHELL
-     sudo echo "{
-        \\\"insecure-registries\\\" : [
-          \\\"172.25.63.87:5000\\\"
-        ]
-      }" > /etc/docker/daemon.json
-     sudo systemctl start docker
-   SHELL
+      node.vm.provision "shell", inline: <<-SHELL
+        sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+        sudo yum -y install docker-ce
+        sudo yum -y install epel-release
+        sudo yum -y install python-pip
+        sudo pip install docker
+        sudo systemctl start docker
+      SHELL
 
-   node.vm.provision "ansible" do |ansible|
-     ansible.playbook = "play-site.yml"
-     ansible.verbose = "v"
-   end
- end
+      node.vm.provision "shell", inline: <<-SHELL
+        sudo touch /etc/docker/daemon.json
+        sudo echo "{
+           \\\"insecure-registries\\\" : [
+             \\\"172.25.63.87:5000\\\"
+           ]
+         }" > /etc/docker/daemon.json
+        sudo systemctl restart docker
+      SHELL
 
-
+      # node.vm.provision "ansible" do |ansible|
+      #   ansible.playbook = "play-site.yml"
+      #   ansible.verbose = "v"
+      # end
+    end
+  end
 end
