@@ -13,15 +13,15 @@
     - eureka-server
     - service1
 
-  - hosts: service
-    become: true
-    vars:
-      config_server: "{{groups['api'][0]}}"
-      current_server: "{{groups['service'][0]}}"
-      another_server: "{{groups['api'][0]}}"
-      recreate: true
-      restart: true
-    roles:
-      - common
-      - eureka-server
-      - service2
+- hosts: service
+  become: true
+  vars:
+    config_server: "{{groups['api'][0]}}"
+    current_server: "{{groups['service'][0]}}"
+    another_server: "{{groups['api'][0]}}"
+    recreate: true
+    restart: true
+  roles:
+    - common
+    - eureka-server
+    - service2
