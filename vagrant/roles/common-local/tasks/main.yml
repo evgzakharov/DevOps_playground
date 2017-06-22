@@ -1,0 +1,14 @@
+- name: delete all old images
+  file:
+    path: images
+    state: absent
+- name: prepare images folder
+  file:
+    path: images
+    state: directory
+- name: save docker images to directory 'image'
+  command: "docker save -o images/{{item['file']}} {{item['image']}}"
+  with_items:
+    - "{{containers}}"
+- name: sync image folder
+  command: vagrant rsync
