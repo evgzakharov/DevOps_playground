@@ -11,8 +11,6 @@
     config_server: "{{vm_hosts[0]}}"
     current_server: "{{vm_hosts[0]}}"
     another_server: "{{vm_hosts[1]}}"
-    recreate: true
-    restart: true
   roles:
     - common
     - config-server
@@ -25,8 +23,6 @@
     config_server: "{{vm_hosts[0]}}"
     current_server: "{{vm_hosts[1]}}"
     another_server: "{{vm_hosts[0]}}"
-    recreate: true
-    restart: true
   roles:
     - common
     - eureka-server

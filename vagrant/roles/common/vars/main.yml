@@ -1,5 +1,7 @@
 config_server_port: 8889
 eureka_server_port: 8761
+recreate: true
+restart: true
 containers:
   - file: 'config_service.tar'
     image: 'services_example/config_service'
