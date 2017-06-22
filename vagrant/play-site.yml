@@ -1,10 +1,16 @@
 ---
+# - hosts: 127.0.0.1
+#   connection: local
+#   roles:
+#     - common
+#     - common-local
+
 - hosts: api
   become: true
   vars:
-    config_server: "{{groups['api'][0]}}"
-    current_server: "{{groups['api'][0]}}"
-    another_server: "{{groups['service'][0]}}"
+    config_server: "{{vm_hosts[0]}}"
+    current_server: "{{vm_hosts[0]}}"
+    another_server: "{{vm_hosts[1]}}"
     recreate: true
     restart: true
   roles:
@@ -16,9 +22,9 @@
 - hosts: service
   become: true
   vars:
-    config_server: "{{groups['api'][0]}}"
-    current_server: "{{groups['service'][0]}}"
-    another_server: "{{groups['api'][0]}}"
+    config_server: "{{vm_hosts[0]}}"
+    current_server: "{{vm_hosts[1]}}"
+    another_server: "{{vm_hosts[0]}}"
     recreate: true
     restart: true
   roles:

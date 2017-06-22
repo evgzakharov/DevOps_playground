@@ -1,2 +1,11 @@
 config_server_port: 8889
 eureka_server_port: 8761
+containers:
+  - file: 'config_service.tar'
+    image: 'services_example/config_service'
+  - file: 'eureka_service.tar'
+    image: 'services_example/eureka_server'
+  - file: 'service1.tar'
+    image: 'services_example/service1'
+  - file: 'service2.tar'
+    image: 'services_example/service2'

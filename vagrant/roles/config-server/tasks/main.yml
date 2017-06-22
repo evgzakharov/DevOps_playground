@@ -1,11 +1,18 @@
-- name: install test application
+- name: load image from file
+  command: "docker load --input /images/config_service.tar"
+- name: install config server application
   docker_container:
     name: "config-server-application"
-    image: "{{registry_host}}/services_example/config_service:latest"
+    image: "services_example/config_service:latest"
     state: started
     env:
       SERVER_PORT: "{{config_server_port}}"
       CONFIG_GIT: "{{server_git}}"
+    etc_hosts: >
+      {
+        "{{current_server['name']}}": "{{current_server['host']}}",
+        "{{another_server['name']}}": "{{another_server['host']}}"
+      }
     ports:
       "{{config_server_port}}:{{config_server_port}}"
     restart: "{{restart}}"

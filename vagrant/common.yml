@@ -1,1 +1,6 @@
-registry_host: "192.168.1.69:5000"
+vm_hosts:
+  - host: "192.168.5.2"
+    name: "vm1"
+
+  - host: "192.168.5.3"
+    name: "vm2"

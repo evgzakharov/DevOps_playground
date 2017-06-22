@@ -1,14 +1,21 @@
 - debug: msg="config_server_url {{ config_server_url }}"
 - debug: msg="config_server_url {{ eureka_server_url }}"
-- name: start service1
+- name: load image from file
+  command: "docker load --input /images/service1.tar"
+- name: install service1 server application
   docker_container:
     name: "service1-application"
-    image: "{{registry_host}}/services_example/service1:latest"
+    image: "services_example/service1:latest"
     state: started
     env:
       CONFIG_SERVER: "{{config_server_url}}"
       EUREKA_SERVER: "{{eureka_server_url}}"
       SERVER_PORT: "{{service_port}}"
+    etc_hosts: >
+      {
+        "{{current_server['name']}}": "{{current_server['host']}}",
+        "{{another_server['name']}}": "{{another_server['host']}}"
+      }
     ports:
       "{{service_port}}:{{service_port}}"
     restart: "{{restart}}"

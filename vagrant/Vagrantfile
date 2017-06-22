@@ -10,11 +10,13 @@ Vagrant.configure("2") do |config|
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
 
+  config.vm.synced_folder "images", "/images", type: "rsync"
+
   (1..2).each do |i|
-    config.vm.define "node-#{i}" do |node|
+    config.vm.define "vm#{i}" do |node|
       node.vm.hostname = "vm#{i}"
       node.vm.network :private_network, ip: "192.168.5.#{i+1}"
-      node.vm.network "forwarded_port", guest: "8080", host: "#{i}"
+      node.vm.network "forwarded_port", guest: "8080", host: "8#{i}"
 
       node.vm.provider "virtualbox" do |v|
         v.memory = 2024
@@ -50,8 +52,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision "vai" do |ansible|
     ansible.inventory_dir=ANSIBLE_INVENTORY_DIR
     ansible.groups = {
-      "api" => ["node-1"],
-      "service" => ["node-2"]
+      "api" => ["vm1"],
+      "service" => ["vm2"]
     }
   end
 end

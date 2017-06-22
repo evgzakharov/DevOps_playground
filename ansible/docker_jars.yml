@@ -41,6 +41,7 @@
         env:
           SERVER_PORT: "{{eureka_server_port}}"
           EUREKA_URL: "{{eureka_server_url}}"
+          EUREKA_HOSTNAME: "{{eureka_server}}"
         ports:
           "8081:{{eureka_server_port}}"
         networks:

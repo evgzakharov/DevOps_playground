@@ -1,1 +1,2 @@
-eureka_server_url: "http://{{another_server}}:{{eureka_server_port}}/eureka"
+eureka_server_url: "http://{{another_server['name']}}:{{eureka_server_port}}/eureka"
+eureka_hostname: "{{current_server['name']}}"
