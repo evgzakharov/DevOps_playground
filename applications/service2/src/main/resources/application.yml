@@ -6,4 +6,4 @@ eureka:
     serviceUrl:
       defaultZone: "${EUREKA_SERVER}"
   instance:
-    preferIpAddress: true
+    hostname: ${EUREKA_HOSTNAME}

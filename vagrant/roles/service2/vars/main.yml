@@ -1,3 +1,4 @@
 service_port: 8080
 config_server_url: "http://{{config_server['name']}}:{{config_server_port}}"
 eureka_server_url: 'http://{{current_server[''name'']}}:{{eureka_server_port}}/eureka/,http://{{another_server[''name'']}}:{{eureka_server_port}}/eureka/'
+eureka_hostname: "{{current_server['name']}}"
