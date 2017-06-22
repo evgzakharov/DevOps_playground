@@ -19,7 +19,7 @@ vagrant plugin install vai
 
 4. Run `ansible-playbook -i .vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory  -v play-site.yml`
 
-5. Check than all docker containers has been running in virtual machines. If not, disable recreate and restart in [common config](/common/vars/main.yml) and try to run command from 4 again.
+5. Check than all docker containers has been running in virtual machines. If not, disable recreate and restart in [common config](/vagrant/roles/common/vars/main.yml) and try to run command from 4 again.
 
 6. Check service1 by executing request:
 
