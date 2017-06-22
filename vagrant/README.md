@@ -1,4 +1,4 @@
-# ansible+vagrant
+# ansible + docker + vagrant (virtualbox)
 
 1. Check that all docker images succesful build by gradle in previous steps. Run `docker images`. You should see something like this:
 
